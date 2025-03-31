@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+    label, select {
+      margin: 10px 0;
+      display: block;
+      width: 100%;
+    }
+    .weather-info {
+      margin-top: 20px;
+    }
+    .weather-info div {
+      margin: 5px 0;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #666;
+      text-align: center;
+    }
+    footer a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Weather Information</h1>
+    <label for="city">Select a City:</label>
+    <select id="city"></select>
+
+    <div class="weather-info">
+      <div>Temperature: <span id="temperature">--</span></div>
+      <div>Wind: <span id="wind">--</span></div>
+      <div>Humidity (Ygrasia): <span id="ygrasia">--</span></div>
+      <div>Pressure (Piesi): <span id="piesi">--</span></div>
+      <div>High Temperature: <span id="high_temp">--</span></div>
+      <div>Low Temperature: <span id="low_temp">--</span></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>
+      Weather data provided by 
+      <a href="https://www.meteo.gr" target="_blank" rel="noopener noreferrer">meteo.gr</a>
+    </p>
+  </footer>
+
+  <script>
+    async function loadCities() {
+      const response = await fetch('/cities');
+      const cities = await response.json();
+
+      const cityDropdown = document.getElementById('city');
+      cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city.id;
+        option.textContent = city.name;
+        cityDropdown.appendChild(option);
+      });
+    }
+
+    async function fetchAndDisplayWeather(cityId) {
+      try {
+        const response = await fetch(`/weather?cityId=${cityId}`);
+        const weatherData = await response.json();
+
+        document.getElementById('temperature').textContent = weatherData[0]; 
+        document.getElementById('wind').textContent = weatherData[1];
+        document.getElementById('ygrasia').textContent = weatherData[2]; 
+        document.getElementById('piesi').textContent = weatherData[3]; 
+        document.getElementById('high_temp').textContent = weatherData[4];
+        document.getElementById('low_temp').textContent = weatherData[5];
+      } catch (error) {
+        console.error('Error fetching weather data:', error.message);
+        alert('Failed to fetch weather data. Please try again.');
+      }
+    }
+
+
+    document.getElementById('city').addEventListener('change', async () => {
+      const selectedCityId = document.getElementById('city').value;
+      await fetchAndDisplayWeather(selectedCityId);
+    });
+
+
+    window.onload = async () => {
+      await loadCities(); 
+      await fetchAndDisplayWeather(1); 
+    };
+  </script>
+</body>
+</html>

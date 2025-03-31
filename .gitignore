@@ -1,0 +1,26 @@
+# Ignore Node.js dependencies
+node_modules/
+
+# Ignore package lock files
+package-lock.json
+
+# Optionally ignore package.json (uncomment if needed)
+# package.json
+
+# Ignore IDE/editor-specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore log files
+*.log
+logs/
+
+# Ignore temporary files
+*.tmp
+*.swp
